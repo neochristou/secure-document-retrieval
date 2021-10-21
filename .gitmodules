@@ -1,0 +1,3 @@
+[submodule "SealPIR"]
+	path = SealPIR
+	url = git@github.com:neochristou/SealPIR.git

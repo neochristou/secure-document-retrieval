@@ -31,8 +31,13 @@ vector_b = np.copy(vector_a)
 vector_a[kw_idx] = 1
 vector_b[kw_idx] = 0
 
-res_a = tfidf.dot(vector_a)
-res_b = tfidf.dot(vector_b)
+vector_a = pickle.dumps(vector_a)
+vector_b = pickle.dumps(vector_b)
+
+s_v_a = pickle.loads(vector_a)
+s_v_b = pickle.loads(vector_b)
+res_a = tfidf.dot(s_v_a)
+res_b = tfidf.dot(s_v_b)
 
 res = res_a - res_b
 

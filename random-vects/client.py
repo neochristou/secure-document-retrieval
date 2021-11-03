@@ -1,5 +1,5 @@
 import pickle
-import random
+import secrets
 import socket
 import time
 
@@ -33,7 +33,7 @@ print()
 print("Choosing random number")
 
 t1 = time.time()
-rand_bitvector = random.getrandbits(nwords)
+rand_bitvector = secrets.randbits(nwords)
 t2 = time.time()
 
 print(f"Chose random number in {t2 - t1} seconds")
@@ -44,8 +44,6 @@ t1 = time.time()
 
 vector_a = np.zeros((nwords))
 for idx in range(nwords):
-    # if rand_bitvector & (1 << idx):
-    #     vector_a[idx] = 1
     vector_a[idx] = (rand_bitvector & (1 << idx)) >> idx
 
 vector_b = np.copy(vector_a)

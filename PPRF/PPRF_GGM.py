@@ -1,7 +1,8 @@
 import random
 
 # nbits = log2(nbr of keywords)
-nbits = 3 # The height of the tree
+# nwords = 474808
+nbits = 19 # The height of the tree
 
 # Size of the PRF values (in bits)
 nbits_rng = 1
@@ -100,4 +101,5 @@ if __name__ == "__main__":
     print("Direct eval : {}. Eval with pk : {}".format(GMM(KEY, 5), Eval(pk, 5)))
     print("Direct eval : {}. Eval with pk : {}".format(GMM(KEY, 6), Eval(pk, 6)))
     print("Direct eval : {}. Eval with pk : {}".format(GMM(KEY, 7), Eval(pk, 7)))
+    print("Direct eval : {}. Eval with pk : {}".format(GMM(KEY, 85), Eval(pk, 85)))
     print("Direct eval : {}. Eval with pk : {}".format(GMM(KEY, 3), Eval(pk, 3)))

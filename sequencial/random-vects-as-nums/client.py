@@ -8,9 +8,10 @@ import numpy as np
 HOST, PORT1, PORT2 = "localhost", 9998, 9999
 
 PICKLED_VECTOR_SZ = 3798626
+SHARED_FOLDER = "../../shared/"
 
-words = open("../shared/words.txt", "r").read().split(',')
-titles = open("../shared/titles.txt", "r").read().split(';;;')
+words = open(SHARED_FOLDER + "words.txt", "r").read().split(',')
+titles = open(SHARED_FOLDER + "titles.txt", "r").read().split(';;;')
 
 ndocs = len(titles)
 nwords = len(words)

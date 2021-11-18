@@ -3,14 +3,14 @@ import socketserver
 import sys
 import time
 
-import numpy as np
-from PPRF_GGM import *
+# import numpy as np
+
+SHARED_FOLDER = "../../shared/"
 
 print("Loading tfidf matrix")
-tfidf = pickle.load(open("../shared/tfidf.pickle", "rb"))
+tfidf = pickle.load(open(SHARED_FOLDER + "tfidf.pickle", "rb"))
 print("Matrix loaded")
 
-nwords = len(open("../shared/words.txt", "r").read().split(','))
 
 class DocumentServer(socketserver.BaseRequestHandler):
 
@@ -27,17 +27,13 @@ class DocumentServer(socketserver.BaseRequestHandler):
 
         # print(len(data))
 
-        pk = pickle.loads(data) # punctured key
-        keyword_vector = np.zeros((nwords))
-        for idx in range(nwords):
-            if idx % 1000 == 0: print("Currently computing PPRF(K, {})".format(idx))
-            keyword_vector[idx] = Eval(pk, idx)
+        keyword_vec = pickle.loads(data)
 
         print("Received vector from client")
         print("Calculating scores for vector")
 
         t1 = time.time()
-        scores = tfidf.dot(keyword_vector)
+        scores = tfidf.dot(keyword_vec)
         t2 = time.time()
 
         print(f"Calculated scores in {t2 - t1} seconds")

@@ -5,11 +5,13 @@ import time
 
 import numpy as np
 
+SHARED_FOLDER = "../../shared/"
+
 print("Loading tfidf matrix")
-tfidf = pickle.load(open("../shared/tfidf.pickle", "rb"))
+tfidf = pickle.load(open(SHARED_FOLDER + "tfidf.pickle", "rb"))
 print("Matrix loaded")
 
-words = open("../shared/words.txt", "r").read().split(',')
+words = open(SHARED_FOLDER + "words.txt", "r").read().split(',')
 nwords = len(words)
 
 

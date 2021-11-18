@@ -3,14 +3,17 @@ import secrets
 import socket
 import time
 
-import numpy as np
+from PPRF_GGM import *
 
 HOST, PORT1, PORT2 = "localhost", 9998, 9999
 
 PICKLED_VECTOR_SZ = 3798626
+SEED_ENTROPY = 123
 
-words = open("../shared/words.txt", "r").read().split(',')
-titles = open("../shared/titles.txt", "r").read().split(';;;')
+SHARED_FOLDER = "../../shared/"
+
+words = open(SHARED_FOLDER + "words.txt", "r").read().split(',')
+titles = open(SHARED_FOLDER + "titles.txt", "r").read().split(';;;')
 
 ndocs = len(titles)
 nwords = len(words)
@@ -19,7 +22,7 @@ while True:
     try:
         # kwords = input(
         #     "Provide the keyword you want to search for: ").split(" ")
-        kwords = ["computer", "science"]
+        kwords = ["computer"]
         kw_idxs = [words.index(kword) for kword in kwords]
         break
     except ValueError:
@@ -33,40 +36,40 @@ print()
 print("Choosing random number")
 
 t1 = time.time()
-rand_bitvector = secrets.randbits(nwords)
+rand_seed = secrets.randbits(SEED_ENTROPY)
+print("Rand seed : {}".format(rand_seed))
+print(kw_idxs)
 t2 = time.time()
 
 print(f"Chose random number in {t2 - t1} seconds")
 print()
 
-print("Creating random vectors")
+print("Creating punctured keys")
 t1 = time.time()
 
-vector_a = np.zeros((nwords))
-for idx in range(nwords):
-    vector_a[idx] = (rand_bitvector & (1 << idx)) >> idx
+#initial_value = GMM(rand_seed, kw_idxs[0])
+#modified_value = 1 - initial_value
 
-vector_b = np.copy(vector_a)
-for kw_idx in kw_idxs:
-    vector_a[kw_idx] = 1
-    vector_b[kw_idx] = 0
+# Generating punctured keys
+pk1 = puncture(rand_seed, kw_idxs[0], 1)
+pk2 = puncture(rand_seed, kw_idxs[0], 0)
 
 t2 = time.time()
 
-print(f"Created vectors in {t2 - t1} seconds")
+print(f"Created puncturedkeys in {t2 - t1} seconds")
 print()
 
 # print(len(pickle.dumps(vector_a)))
 
-print("Sending vectors to servers")
+print("Sending punctured keys to servers")
 
 t1 = time.time()
 
 sock1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sock1.connect((HOST, PORT1))
 
-va_pickled = pickle.dumps(vector_a)
-sock1.sendall(va_pickled)
+pk1_pickled = pickle.dumps(pk1)
+sock1.sendall(pk1_pickled)
 
 BUFF_SIZE = 4096  # 4 KiB
 
@@ -81,8 +84,8 @@ r1 = pickle.loads(data)
 sock2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sock2.connect((HOST, PORT2))
 
-vb_pickled = pickle.dumps(vector_b)
-sock2.sendall(vb_pickled)
+pk2_pickled = pickle.dumps(pk2)
+sock2.sendall(pk2_pickled)
 
 data = b''
 while True:
@@ -94,7 +97,7 @@ r2 = pickle.loads(data)
 
 t2 = time.time()
 
-print("Size of each vector (in bytes): ", len(va_pickled))
+print("Size of each punctured key (in bytes): ", len(pk1))
 print()
 
 print(f"Received server scores in {t2 - t1} seconds")

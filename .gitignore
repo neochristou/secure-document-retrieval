@@ -1,2 +1,5 @@
 Gutenberg/**
+__pycache__/
 tfidf.pickle
+*.swp
+*.swo

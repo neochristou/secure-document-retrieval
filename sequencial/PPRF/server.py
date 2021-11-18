@@ -4,6 +4,7 @@ import sys
 import time
 
 import numpy as np
+
 from PPRF_GGM import *
 
 print("Loading tfidf matrix")
@@ -29,22 +30,23 @@ class DocumentServer(socketserver.BaseRequestHandler):
                 break
 
         # print(len(data))
-
         pk = pickle.loads(data)  # punctured key
+        print("Received vector from client")
+
+        print("Calculating GGM")
+        t1 = time.time()
         keyword_vector = np.zeros((nwords))
         for idx in range(nwords):
             if idx % 1000 == 0:
                 print("Currently computing PPRF(K, {})".format(idx))
             keyword_vector[idx] = Eval(pk, idx)
 
-        print("Received vector from client")
         print("Calculating scores for vector")
 
-        t1 = time.time()
         scores = tfidf.dot(keyword_vector)
         t2 = time.time()
 
-        print(f"Calculated scores in {t2 - t1} seconds")
+        print(f"Calculated GGM and scores in {t2 - t1} seconds")
         # print(len(pickle.dumps(scores)))
 
         self.request.sendall(pickle.dumps(scores))

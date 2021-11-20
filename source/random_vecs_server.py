@@ -1,21 +1,11 @@
 import pickle
 import socketserver
-import sys
 import time
 
-# import numpy as np
 
-SHARED_FOLDER = "../../shared/"
-
-print("Loading tfidf matrix")
-tfidf = pickle.load(open(SHARED_FOLDER + "tfidf.pickle", "rb"))
-print("Matrix loaded")
-
-
-class DocumentServer(socketserver.BaseRequestHandler):
+class RandomVectorsServer(socketserver.BaseRequestHandler):
 
     def handle(self):
-        global tfidf
 
         BUFF_SIZE = 4096  # 4 KiB
         data = b''
@@ -33,17 +23,10 @@ class DocumentServer(socketserver.BaseRequestHandler):
         print("Calculating scores for vector")
 
         t1 = time.time()
-        scores = tfidf.dot(keyword_vec)
+        scores = self.server.tfidf.dot(keyword_vec)
         t2 = time.time()
 
         print(f"Calculated scores in {t2 - t1} seconds")
         # print(len(pickle.dumps(scores)))
 
         self.request.sendall(pickle.dumps(scores))
-
-
-if __name__ == "__main__":
-    HOST, PORT = "localhost", int(sys.argv[1])
-
-    with socketserver.TCPServer((HOST, PORT), DocumentServer) as server:
-        server.serve_forever()

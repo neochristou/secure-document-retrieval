@@ -1,0 +1,4 @@
+
+HOST, PORT1, PORT2 = "localhost", 9998, 9999
+SHARED_FOLDER = "../shared/"
+SEED_ENTROPY = 123

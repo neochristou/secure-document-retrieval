@@ -3,8 +3,6 @@ import pickle
 import time
 from multiprocessing import Manager, Process
 
-import numpy as np
-
 import config
 from sdr_util import get_random_bits, send_to_server
 
@@ -19,9 +17,7 @@ class RandomVectorsOptClient():
         self.kw_idxs = kw_idxs
         self.nwords = nwords
 
-    def request_documents(self):
-
-        rand_bitvector = get_random_bits(self.nwords)
+    def request_scores(self):
 
         print("Choosing random numbers")
         t1 = time.time()
@@ -60,9 +56,9 @@ class RandomVectorsOptClient():
         # Shared dictionary to get result back from subprocess
         results = manager.dict()
 
-        p1 = Process(target=send_to_server, args=(a_enc, config.HOST,
+        p1 = Process(target=send_to_server, args=(config.SCORES_HEADER + a_enc, config.HOST,
                                                   config.PORT1, results, 0))
-        p2 = Process(target=send_to_server, args=(b_enc, config.HOST,
+        p2 = Process(target=send_to_server, args=(config.SCORES_HEADER + b_enc, config.HOST,
                                                   config.PORT2, results, 1))
 
         p1.start()

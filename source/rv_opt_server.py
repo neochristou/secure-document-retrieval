@@ -4,12 +4,15 @@ import time
 
 import numpy as np
 
+import config
+
 
 class RandomVectorsOptServer(socketserver.BaseRequestHandler):
 
     def handle(self):
 
         BUFF_SIZE = 4096  # 4 KiB
+
         data = b''
         while True:
             part = self.request.recv(BUFF_SIZE)
@@ -17,24 +20,41 @@ class RandomVectorsOptServer(socketserver.BaseRequestHandler):
             if len(part) < BUFF_SIZE:
                 break
 
-        num = int.from_bytes(data, "big")
+        if data.startswith(config.SCORES_HEADER):
+            data = data[len(config.SCORES_HEADER):]
+            num = int.from_bytes(data, "big")
 
-        print("Received number from client")
-        print()
+            print("Received number from client")
+            print()
 
-        print("Turning number into numpy array")
-        t1 = time.time()
-        keyword_vec = np.zeros((self.server.nwords))
-        for idx in range(self.server.nwords):
-            keyword_vec[idx] = (num & (1 << idx)) >> idx
-        t2 = time.time()
-        print(f"Turned number into array in {t2 - t1} seconds")
+            print("Turning number into numpy array")
+            t1 = time.time()
+            keyword_vec = np.zeros((self.server.nwords))
+            for idx in range(self.server.nwords):
+                keyword_vec[idx] = (num & (1 << idx)) >> idx
+            t2 = time.time()
+            print(f"Turned number into array in {t2 - t1} seconds")
 
-        print("Calculating scores for vector")
+            print("Calculating scores for vector")
 
-        t1 = time.time()
-        scores = self.server.tfidf.dot(keyword_vec)
-        t2 = time.time()
+            t1 = time.time()
+            scores = self.server.tfidf.dot(keyword_vec)
+            t2 = time.time()
 
-        print(f"Calculated scores in {t2 - t1} seconds")
-        self.request.sendall(pickle.dumps(scores))
+            print(f"Calculated scores in {t2 - t1} seconds")
+            self.request.sendall(pickle.dumps(scores))
+
+        elif data.startswith(config.PIR_HEADER):
+
+            print("Retrieving requested documents")
+
+            t1 = time.time()
+            data = data[len(config.PIR_HEADER):]
+            docs = self.server.pir_func(data)
+            t2 = time.time()
+
+            print(f"Requested documents retrieved in {t2 - t1} seconds")
+
+            self.request.sendall(docs.encode())
+        else:
+            raise NotImplementedError

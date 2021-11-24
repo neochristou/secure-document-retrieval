@@ -22,7 +22,7 @@ class RandomVectorsClient():
         self.kw_idxs = kw_idxs
         self.nwords = nwords
 
-    def request_documents(self):
+    def request_scores(self):
 
         rand_bitvector = get_random_bits(self.nwords)
 
@@ -51,10 +51,10 @@ class RandomVectorsClient():
         results = manager.dict()
 
         va_pickled = pickle.dumps(vector_a)
-        p1 = Process(target=send_to_server, args=(va_pickled, config.HOST,
+        p1 = Process(target=send_to_server, args=(config.SCORES_HEADER + va_pickled, config.HOST,
                                                   config.PORT1, results, 0))
         vb_pickled = pickle.dumps(vector_b)
-        p2 = Process(target=send_to_server, args=(vb_pickled, config.HOST,
+        p2 = Process(target=send_to_server, args=(config.SCORES_HEADER + vb_pickled, config.HOST,
                                                   config.PORT2, results, 1))
 
         p1.start()

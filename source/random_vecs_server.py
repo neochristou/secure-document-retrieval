@@ -2,6 +2,8 @@ import pickle
 import socketserver
 import time
 
+import config
+
 
 class RandomVectorsServer(socketserver.BaseRequestHandler):
 
@@ -15,18 +17,33 @@ class RandomVectorsServer(socketserver.BaseRequestHandler):
             if len(part) < BUFF_SIZE:
                 break
 
-        # print(len(data))
+        if data.startswith(config.SCORES_HEADER):
 
-        keyword_vec = pickle.loads(data)
+            data = data[len(config.SCORES_HEADER):]
+            keyword_vec = pickle.loads(data)
 
-        print("Received vector from client")
-        print("Calculating scores for vector")
+            print("Received vector from client")
+            print("Calculating scores for vector")
 
-        t1 = time.time()
-        scores = self.server.tfidf.dot(keyword_vec)
-        t2 = time.time()
+            t1 = time.time()
+            scores = self.server.tfidf.dot(keyword_vec)
+            t2 = time.time()
 
-        print(f"Calculated scores in {t2 - t1} seconds")
-        # print(len(pickle.dumps(scores)))
+            print(f"Calculated scores in {t2 - t1} seconds")
 
-        self.request.sendall(pickle.dumps(scores))
+            self.request.sendall(pickle.dumps(scores))
+
+        elif data.startswith(config.PIR_HEADER):
+
+            print("Retrieving requested documents")
+
+            t1 = time.time()
+            data = data[len(config.PIR_HEADER):]
+            docs = self.server.pir_func(data)
+            t2 = time.time()
+
+            print(f"Requested documents retrieved in {t2 - t1} seconds")
+
+            self.request.sendall(docs.encode())
+        else:
+            raise NotImplementedError

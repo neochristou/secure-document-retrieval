@@ -17,7 +17,7 @@ class PPRFClient():
         self.kw_idxs = kw_idxs
         self.nwords = nwords
 
-    def request_documents(self):
+    def request_scores(self):
 
         print()
         print("Choosing random number")
@@ -57,10 +57,10 @@ class PPRFClient():
         results = manager.dict()
 
         pk1_pickled = pickle.dumps(pk1)
-        p1 = Process(target=send_to_server, args=(pk1_pickled, config.HOST,
+        p1 = Process(target=send_to_server, args=(config.SCORES_HEADER + pk1_pickled, config.HOST,
                                                   config.PORT1, results, 0))
         pk2_pickled = pickle.dumps(pk2)
-        p2 = Process(target=send_to_server, args=(pk2_pickled, config.HOST,
+        p2 = Process(target=send_to_server, args=(config.SCORES_HEADER + pk2_pickled, config.HOST,
                                                   config.PORT2, results, 1))
 
         p1.start()

@@ -6,6 +6,7 @@ import config
 from pir_server_funcs import naive_pir
 from PPRF_opt_server import PPRFOptServer
 from PPRF_server import PPRFServer
+from DPF_server import DPFServer
 from random_vecs_server import RandomVectorsServer
 from rv_opt_server import RandomVectorsOptServer
 
@@ -15,7 +16,7 @@ if __name__ == "__main__":
         description="Choose secure matrix multiplication scheme")
     arg_parser.add_argument("--scheme",
                             choices=["random-vectors",
-                                     "rv-opt", "PPRF", "PPRF-opt"],
+                                     "rv-opt", "PPRF", "PPRF-opt", "DPF"],
                             required=True,
                             help="Scheme to be used for matrix multiplication")
     arg_parser.add_argument("-p", "--port",
@@ -43,6 +44,8 @@ if __name__ == "__main__":
         server = PPRFServer
     if args.scheme == "PPRF-opt":
         server = PPRFOptServer
+    if args.scheme == "DPF":
+        server = DPFServer
 
     if args.pir == "naive":
         pir_func = naive_pir

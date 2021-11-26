@@ -3,6 +3,7 @@ import argparse
 import config
 from naive_pir_cli import NaivePIRClient
 from PPRF_cli import PPRFClient
+from DPF_cli import DPFClient
 from random_vecs_cli import RandomVectorsClient
 from rv_opt_cli import RandomVectorsOptClient
 from sdr_util import choose_document, get_highest_ranked, get_user_keywords
@@ -12,7 +13,7 @@ if __name__ == "__main__":
     arg_parser = argparse.ArgumentParser(
         description="Choose secure matrix multiplication scheme")
     arg_parser.add_argument("--scheme",
-                            choices=["random-vectors", "rv-opt", "PPRF"],
+                            choices=["random-vectors", "rv-opt", "PPRF", "DPF"],
                             required=True,
                             help="Scheme to be used for matrix multiplication")
 
@@ -36,6 +37,8 @@ if __name__ == "__main__":
         mm_client = RandomVectorsOptClient(kwords, kw_idxs, len(words))
     if args.scheme == "PPRF":
         mm_client = PPRFClient(kwords, kw_idxs, len(words))
+    if args.scheme == "DPF":
+        mm_client = DPFClient(kwords, kw_idxs, len(words))
 
     scores = mm_client.request_scores()
     highest_ranked = get_highest_ranked(scores, words, titles)

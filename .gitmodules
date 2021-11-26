@@ -1,3 +1,6 @@
 [submodule "SealPIR"]
 	path = SealPIR
 	url = git@github.com:neochristou/SealPIR.git
+[submodule "source/libdpf"]
+	path = source/libdpf
+	url = https://github.com/weikengchen/libdpf.git

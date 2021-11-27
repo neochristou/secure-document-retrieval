@@ -3,3 +3,5 @@ __pycache__/
 tfidf.pickle
 *.swp
 *.swo
+**/k0
+**/k1

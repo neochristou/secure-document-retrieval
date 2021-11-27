@@ -37,7 +37,7 @@ class DPFClient():
         # modified_value = 1 - initial_value
 
         # Generating DPF keys
-        k0,k1 = dpf_gen_keys(self.kw_idxs[0])
+        k0, k1 = dpf_gen_keys(self.kw_idxs[0])
 
         t2 = time.time()
 
@@ -54,9 +54,9 @@ class DPFClient():
         # Shared dictionary to get result back from subprocess
         results = manager.dict()
 
-        p1 = Process(target=send_to_server, args=(k0, config.HOST,
+        p1 = Process(target=send_to_server, args=(config.SCORES_HEADER + k0, config.HOST,
                                                   config.PORT1, results, 0))
-        p2 = Process(target=send_to_server, args=(k1, config.HOST,
+        p2 = Process(target=send_to_server, args=(config.SCORES_HEADER + k1, config.HOST,
                                                   config.PORT2, results, 1))
 
         p1.start()

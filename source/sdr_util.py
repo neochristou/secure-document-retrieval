@@ -1,6 +1,10 @@
+import json
+import os
 import secrets
 import socket
 import time
+
+import binpacking
 
 import config
 
@@ -91,8 +95,8 @@ def choose_document(candidates):
     while True:
         try:
             choice = int(input("Index of document to retrieve: "))
-            _, (_, doc_idx) = candidates[choice]
-            return doc_idx
+            doc, (_, doc_idx) = candidates[choice]
+            return doc, doc_idx
         except IndexError:
             print("Wrong index!")
 
@@ -103,3 +107,45 @@ def load_document(doc_idx, titles):
     docname = titles[doc_idx] + '.txt'
     with open(config.DOCS_PATH + docname, 'r') as doc:
         return doc.read()
+
+
+def create_bins():
+
+    file_sizes = {}
+    file_contents = {}
+    for filename in os.listdir(config.DOCS_PATH):
+        with open(config.DOCS_PATH + filename, 'rb') as file:
+            contents = file.read()
+            file_len = len(contents)
+            file_sizes[filename] = file_len
+            file_contents[filename] = contents
+
+    max_file = max(file_sizes, key=file_sizes.get)
+    max_size = file_sizes[max_file]
+    # print(f"Largest file (in bytes): {max_file}: {max_size}")
+
+    bins = binpacking.to_constant_volume(file_sizes, max_size)
+
+    bin_metadata = {}
+    file_matrix = []
+    for row_num, file_bin in enumerate(bins):
+        row = b''
+        doc_start = 0
+        for title, size in file_bin.items():
+            contents = file_contents[title]
+            row += contents
+            bin_metadata[title] = (row_num, doc_start, size)
+            doc_start += size
+        row += b'\x00' * (max_size - len(row))
+        file_matrix.append(row)
+
+    # Save the bin metadata
+    # bins_json = json.dumps(bin_metadata)
+    # with open(config.SHARED_FOLDER + 'bins.json', 'w') as f:
+    #     f.write(bins_json)
+
+    return file_matrix
+
+
+if __name__ == "__main__":
+    create_bins()

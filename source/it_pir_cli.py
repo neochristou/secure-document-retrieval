@@ -1,10 +1,10 @@
 import json
-import secrets
 import time
 from multiprocessing import Manager, Process
 
 import config
-from sdr_util import send_to_server
+from DPF import *
+from sdr_util import byte_xor, send_to_server
 
 
 class ITPIRClient:
@@ -22,25 +22,34 @@ class ITPIRClient:
         doc_row = metadata[doc_name]
         doc_row_idx, doc_start, doc_size = doc_row
 
-        # manager = Manager()
-        # # Shared dictionary to get result back from subprocess
-        # results = manager.dict()
+        k0, k1 = dpf_gen_keys(doc_row_idx, config.BIN_BITS)
 
-        # p1 = Process(target=send_to_server, args=(config.PIR_HEADER + doc_list1,
-        #                                           config.HOST, config.PORT1,
-        #                                           results, 0))
-        # p2 = Process(target=send_to_server, args=(config.PIR_HEADER + doc_list2,
-        #                                           config.HOST, config.PORT2,
-        #                                           results, 1))
+        manager = Manager()
+        # Shared dictionary to get result back from subprocess
+        results = manager.dict()
 
-        # print("Requesting random documents from servers")
-        # t1 = time.time()
-        # p1.start()
-        # p2.start()
-        # p1.join()
-        # p2.join()
+        p1 = Process(target=send_to_server, args=(config.PIR_HEADER + k0,
+                                                  config.HOST, config.PORT1,
+                                                  results, 0))
+        p2 = Process(target=send_to_server, args=(config.PIR_HEADER + k1,
+                                                  config.HOST, config.PORT2,
+                                                  results, 1))
 
-        # t2 = time.time()
-        # print(f"Retrieved requsted documents in {t2 - t1} seconds")
+        print("Requesting random documents from servers")
+        t1 = time.time()
+        p1.start()
+        p2.start()
+        p1.join()
+        p2.join()
 
-        # # return correct_doc
+        t2 = time.time()
+        print(f"Retrieved requsted documents in {t2 - t1} seconds")
+
+        r1 = results[0]
+        r2 = results[1]
+
+        dec_row = byte_xor(r1, r2)
+
+        correct_doc = dec_row[doc_start: doc_start + doc_size]
+
+        return correct_doc

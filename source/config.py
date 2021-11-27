@@ -7,3 +7,5 @@ DOCS_PATH = "../Gutenberg/txt/"
 SCORES_HEADER = b"SCORES"
 PIR_HEADER = b"PIR"
 DOCS_DELIM = ';;;;;'
+NWORD_BITS = 19
+BIN_BITS = 9

@@ -26,7 +26,8 @@ class DPFServer(socketserver.BaseRequestHandler):
 
             print("Calculating query vector")
             t1 = time.time()
-            keyword_vector = dpf_eval_full(k)[:self.server.nwords]
+            keyword_vector = dpf_eval_full(k, config.NWORD_BITS)[
+                :self.server.nwords]
 
             print("Calculating scores for vector")
 
@@ -49,6 +50,6 @@ class DPFServer(socketserver.BaseRequestHandler):
 
             print(f"Requested documents retrieved in {t2 - t1} seconds")
 
-            self.request.sendall(docs.encode())
+            self.request.sendall(docs)
         else:
             raise NotImplementedError

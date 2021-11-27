@@ -37,7 +37,7 @@ class DPFClient():
         # modified_value = 1 - initial_value
 
         # Generating DPF keys
-        k0, k1 = dpf_gen_keys(self.kw_idxs[0])
+        k0, k1 = dpf_gen_keys(self.kw_idxs[0], config.NWORD_BITS)
 
         t2 = time.time()
 

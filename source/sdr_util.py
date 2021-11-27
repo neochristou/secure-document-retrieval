@@ -5,6 +5,7 @@ import socket
 import time
 
 import binpacking
+import numpy as np
 
 import config
 
@@ -145,6 +146,12 @@ def create_bins():
     #     f.write(bins_json)
 
     return file_matrix
+
+
+def byte_xor(b1, b2):
+    n_b1 = np.frombuffer(b1, dtype='uint8')
+    n_b2 = np.frombuffer(b2, dtype='uint8')
+    return (n_b1 ^ n_b2).tobytes()
 
 
 if __name__ == "__main__":

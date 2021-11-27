@@ -8,10 +8,8 @@ LIB_PATH = "./libdpf/"
 FSSGEN_PATH = LIB_PATH + "fssgen"
 FSSEVAL_PATH = LIB_PATH + "fsseval"
 
-nbits = 19
 
-
-def dpf_gen_keys(alpha):
+def dpf_gen_keys(alpha, nbits):
     cmd = [FSSGEN_PATH, str(nbits), str(alpha)]
     subprocess.run(cmd, capture_output=True, text=True)
     with open("k0", "rb") as fd:
@@ -21,7 +19,7 @@ def dpf_gen_keys(alpha):
     return (k0, k1)
 
 
-def dpf_eval_full(key):
+def dpf_eval_full(key, nbits):
     # Generate a random key name
     letters = string.ascii_letters
     temp_key_filename = "/tmp/key_" + \

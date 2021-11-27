@@ -3,10 +3,10 @@ import pickle
 import socketserver
 
 import config
-from pir_server_funcs import naive_pir
+from DPF_server import DPFServer
+from pir_server_funcs import it_pir, naive_pir
 from PPRF_opt_server import PPRFOptServer
 from PPRF_server import PPRFServer
-from DPF_server import DPFServer
 from random_vecs_server import RandomVectorsServer
 from rv_opt_server import RandomVectorsOptServer
 
@@ -23,7 +23,7 @@ if __name__ == "__main__":
                             type=int,
                             required=True)
     arg_parser.add_argument("--pir",
-                            choices=["naive"],
+                            choices=["naive", "it-pir"],
                             required=True,
                             help="Scheme to be used for PIR")
 
@@ -49,6 +49,8 @@ if __name__ == "__main__":
 
     if args.pir == "naive":
         pir_func = naive_pir
+    if args.pir == "it-pir":
+        pir_func = it_pir
 
     with socketserver.TCPServer((config.HOST, args.port), server) as doc_server:
         doc_server.tfidf = tfidf

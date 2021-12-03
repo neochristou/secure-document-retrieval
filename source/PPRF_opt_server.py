@@ -52,6 +52,6 @@ class PPRFOptServer(socketserver.BaseRequestHandler):
 
             print(f"Requested documents retrieved in {t2 - t1} seconds")
 
-            self.request.sendall(docs.encode())
+            self.request.sendall(docs)
         else:
             raise NotImplementedError

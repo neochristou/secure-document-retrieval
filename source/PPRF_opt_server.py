@@ -29,8 +29,8 @@ class PPRFOptServer(socketserver.BaseRequestHandler):
             t1 = time.time()
             keyword_vector = np.zeros((self.server.nwords))
             for idx in range(self.server.nwords):
-                # if idx % 1000 == 0:
-                #     print("Currently computing PPRF(K, {})".format(idx))
+                if idx % 10000 == 0:
+                    print("Currently computing PPRF(K, {})".format(idx))
                 keyword_vector[idx] = Eval_opt(pk, idx)
 
             print("Calculating scores for vector")

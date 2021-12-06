@@ -15,9 +15,9 @@ def get_user_keywords(words):
 
     while True:
         try:
-            # kwords = input(
-            #     "Provide the keyword you want to search for: ").split(" ")
-            kwords = ["computer"]
+            kwords = input(
+                "Provide the keyword you want to search for: ").split(" ")
+            # kwords = ["computer"]
             kw_idxs = [words.index(kword) for kword in kwords]
             break
         except ValueError:

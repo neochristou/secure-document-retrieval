@@ -24,6 +24,11 @@ if __name__ == "__main__":
                             required=True,
                             help="Scheme to be used for PIR")
 
+    arg_parser.add_argument("--ports",
+                            required=True,
+                            nargs=2,
+                            help="Scheme to be used for PIR")
+
     args = arg_parser.parse_args()
 
     with open(config.SHARED_FOLDER + "words.txt", "r") as words_file:
@@ -42,6 +47,9 @@ if __name__ == "__main__":
     if args.scheme == "DPF":
         mm_client = DPFClient(kwords, kw_idxs, len(words))
 
+    port1_arg, port2_arg = args.ports
+    mm_client.port1 = int(port1_arg)
+    mm_client.port2 = int(port2_arg)
     scores = mm_client.request_scores()
     highest_ranked = get_highest_ranked(scores, words, titles)
     doc, doc_idx = choose_document(highest_ranked)
@@ -51,6 +59,8 @@ if __name__ == "__main__":
     if args.pir == "it-pir":
         pir_client = ITPIRClient(doc)
 
+    pir_client.port1 = int(port1_arg)
+    pir_client.port2 = int(port2_arg)
     doc = pir_client.retrieve_document()
     print("Requested document:")
     print(doc.decode())

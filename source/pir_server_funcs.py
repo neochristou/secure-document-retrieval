@@ -4,10 +4,10 @@ import numpy as np
 
 import config
 from DPF import *
-from sdr_util import byte_xor, create_bins, load_document
+from sdr_util import byte_xor, load_document
 
 
-def naive_pir(doc_idxs):
+def naive_pir(doc_idxs, *_):
 
     titles = open(config.SHARED_FOLDER + "titles.txt", "r").read().split(';;;')
     doc_idxs = [int(doc_idx) for doc_idx in doc_idxs.split(b',')]
@@ -25,15 +25,7 @@ def naive_pir(doc_idxs):
     return results.encode()
 
 
-def it_pir(key):
-
-    print("Creating bins")
-
-    t1 = time.time()
-    file_matrix = create_bins()
-    t2 = time.time()
-
-    print(f"Created bins in {t2 - t1} seconds")
+def it_pir(key, file_matrix):
 
     print("Expanding client's query")
 

@@ -9,6 +9,7 @@ from PPRF_opt_server import PPRFOptServer
 from PPRF_server import PPRFServer
 from random_vecs_server import RandomVectorsServer
 from rv_opt_server import RandomVectorsOptServer
+from sdr_util import create_bins
 
 if __name__ == "__main__":
 
@@ -33,6 +34,10 @@ if __name__ == "__main__":
     tfidf = pickle.load(open(config.SHARED_FOLDER + "tfidf.pickle", "rb"))
     print("Matrix loaded")
 
+    print("Creating bins")
+    file_matrix = create_bins()
+    print(f"Created bins")
+
     words = open(config.SHARED_FOLDER + "words.txt", "r").read().split(',')
     nwords = len(words)
 
@@ -56,5 +61,5 @@ if __name__ == "__main__":
         doc_server.tfidf = tfidf
         doc_server.nwords = nwords
         doc_server.pir_func = pir_func
-        # doc_server_docs = docs
+        doc_server.file_matrix = file_matrix
         doc_server.serve_forever()

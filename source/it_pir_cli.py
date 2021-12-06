@@ -29,10 +29,10 @@ class ITPIRClient:
         results = manager.dict()
 
         p1 = Process(target=send_to_server, args=(config.PIR_HEADER + k0,
-                                                  config.HOST, config.PORT1,
+                                                  config.HOST, self.port1,
                                                   results, 0))
         p2 = Process(target=send_to_server, args=(config.PIR_HEADER + k1,
-                                                  config.HOST, config.PORT2,
+                                                  config.HOST, self.port2,
                                                   results, 1))
 
         print("Requesting random documents from servers")

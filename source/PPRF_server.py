@@ -50,7 +50,7 @@ class PPRFServer(socketserver.BaseRequestHandler):
 
             t1 = time.time()
             data = data[len(config.PIR_HEADER):]
-            docs = self.server.pir_func(data)
+            docs = self.server.pir_func(data, self.server.file_matrix)
             t2 = time.time()
 
             print(f"Requested documents retrieved in {t2 - t1} seconds")

@@ -58,10 +58,10 @@ class PPRFClient():
 
         pk1_pickled = pickle.dumps(pk1)
         p1 = Process(target=send_to_server, args=(config.SCORES_HEADER + pk1_pickled, config.HOST,
-                                                  config.PORT1, results, 0))
+                                                  self.port1, results, 0))
         pk2_pickled = pickle.dumps(pk2)
         p2 = Process(target=send_to_server, args=(config.SCORES_HEADER + pk2_pickled, config.HOST,
-                                                  config.PORT2, results, 1))
+                                                  self.port2, results, 1))
 
         p1.start()
         p2.start()

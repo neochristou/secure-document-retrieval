@@ -55,9 +55,9 @@ class DPFClient():
         results = manager.dict()
 
         p1 = Process(target=send_to_server, args=(config.SCORES_HEADER + k0, config.HOST,
-                                                  config.PORT1, results, 0))
+                                                  self.port1, results, 0))
         p2 = Process(target=send_to_server, args=(config.SCORES_HEADER + k1, config.HOST,
-                                                  config.PORT2, results, 1))
+                                                  self.port2, results, 1))
 
         p1.start()
         p2.start()

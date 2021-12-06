@@ -52,10 +52,10 @@ class RandomVectorsClient():
 
         va_pickled = pickle.dumps(vector_a)
         p1 = Process(target=send_to_server, args=(config.SCORES_HEADER + va_pickled, config.HOST,
-                                                  config.PORT1, results, 0))
+                                                  self.port1, results, 0))
         vb_pickled = pickle.dumps(vector_b)
         p2 = Process(target=send_to_server, args=(config.SCORES_HEADER + vb_pickled, config.HOST,
-                                                  config.PORT2, results, 1))
+                                                  self.port2, results, 1))
 
         p1.start()
         p2.start()

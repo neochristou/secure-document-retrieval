@@ -42,7 +42,10 @@ class RandomVectorsOptServer(socketserver.BaseRequestHandler):
             t2 = time.time()
 
             print(f"Calculated scores in {t2 - t1} seconds")
-            self.request.sendall(pickle.dumps(scores))
+            reply = pickle.dumps(scores)
+            self.request.sendall(reply)
+            with open(config.BENCH_FOLDER + "rv_opt_server_sz.txt", "a+") as psz:
+                psz.write(f"{len(reply)},")
 
         elif data.startswith(config.PIR_HEADER):
 
@@ -56,5 +59,7 @@ class RandomVectorsOptServer(socketserver.BaseRequestHandler):
             print(f"Requested documents retrieved in {t2 - t1} seconds")
 
             self.request.sendall(docs)
+            with open(config.BENCH_FOLDER + config.PIR_SERVER_FILE, "a+") as psz:
+                psz.write(f"{len(docs)},")
         else:
             raise NotImplementedError

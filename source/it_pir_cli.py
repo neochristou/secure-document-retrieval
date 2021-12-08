@@ -1,6 +1,8 @@
 import json
+import sys
 import time
 from multiprocessing import Manager, Process
+from random import randint
 
 import config
 from DPF import *
@@ -14,6 +16,8 @@ class ITPIRClient:
         self.doc_title = doc_title
 
     def retrieve_document(self):
+
+        start_time = time.time()
 
         with open(config.SHARED_FOLDER + 'bins.json', 'r') as metadata_file:
             metadata = json.loads(metadata_file.read())
@@ -52,4 +56,25 @@ class ITPIRClient:
 
         correct_doc = dec_row[doc_start: doc_start + doc_size]
 
+        end_time = time.time()
+
+        # Benchmarking
+        with open(config.BENCH_FOLDER + "it_pir_cli_latency.txt", "a+") as lat:
+            lat.write(f"{end_time - start_time},")
+        with open(config.BENCH_FOLDER + "it_pir_cli_psz.txt", "a+") as psz:
+            psz.write(f"{len(k0)},")
+
         return correct_doc
+
+
+if __name__ == "__main__":
+
+    with open(config.SHARED_FOLDER + "titles.txt", "r") as titles_file:
+        titles = titles_file.read().split(';;;')
+
+    rand_doc = randint(0, len(titles))
+    # Pick random word for benchmarking
+    client = ITPIRClient(titles[rand_doc])
+    client.port1 = int(sys.argv[1])
+    client.port2 = int(sys.argv[2])
+    client.retrieve_document()

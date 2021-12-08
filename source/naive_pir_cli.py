@@ -1,6 +1,8 @@
 import secrets
+import sys
 import time
 from multiprocessing import Manager, Process
+from random import randint
 
 import config
 from sdr_util import send_to_server
@@ -14,6 +16,8 @@ class NaivePIRClient:
         self.ndocs = ndocs
 
     def retrieve_document(self):
+
+        start_time = time.time()
 
         random_idxs = []
 
@@ -63,4 +67,26 @@ class NaivePIRClient:
 
         res = res.split(config.DOCS_DELIM.encode())
         correct_doc = res[rand_idx]
+
+        end_time = time.time()
+
+        # Benchmarking
+        with open(config.BENCH_FOLDER + "naive_pir_cli_latency.txt", "a+") as lat:
+            lat.write(f"{end_time - start_time},")
+        with open(config.BENCH_FOLDER + "naive_pir_cli_psz.txt", "a+") as psz:
+            psz.write(f"{len(doc_list1)},")
+
         return correct_doc
+
+
+if __name__ == "__main__":
+
+    with open(config.SHARED_FOLDER + "titles.txt", "r") as titles_file:
+        titles = titles_file.read().split(';;;')
+
+    rand_doc = randint(0, len(titles))
+    # Pick random word for benchmarking
+    client = NaivePIRClient(rand_doc, len(titles))
+    client.port1 = int(sys.argv[1])
+    client.port2 = int(sys.argv[2])
+    client.retrieve_document()

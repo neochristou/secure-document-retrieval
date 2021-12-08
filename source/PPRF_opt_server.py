@@ -28,6 +28,8 @@ class PPRFOptServer(socketserver.BaseRequestHandler):
             print("Calculating GGM")
             t1 = time.time()
             keyword_vector = np.zeros((self.server.nwords))
+            # Reset the cache for the new word
+            reset_cache()
             for idx in range(self.server.nwords):
                 if idx % 10000 == 0:
                     print("Currently computing PPRF(K, {})".format(idx))
@@ -40,7 +42,10 @@ class PPRFOptServer(socketserver.BaseRequestHandler):
 
             print(f"Calculated GGM and scores in {t2 - t1} seconds")
 
-            self.request.sendall(pickle.dumps(scores))
+            reply = pickle.dumps(scores)
+            self.request.sendall(reply)
+            with open(config.BENCH_FOLDER + "PPRF_opt_server_sz.txt", "a+") as psz:
+                psz.write(f"{len(reply)},")
 
         elif data.startswith(config.PIR_HEADER):
             print("Retrieving requested documents")
@@ -53,5 +58,8 @@ class PPRFOptServer(socketserver.BaseRequestHandler):
             print(f"Requested documents retrieved in {t2 - t1} seconds")
 
             self.request.sendall(docs)
+            with open(config.BENCH_FOLDER + config.PIR_SERVER_FILE, "a+") as psz:
+                psz.write(f"{len(docs)},")
+
         else:
             raise NotImplementedError

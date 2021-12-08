@@ -15,7 +15,7 @@ if __name__ == "__main__":
         description="Choose secure matrix multiplication scheme")
     arg_parser.add_argument("--scheme",
                             choices=["random-vectors",
-                                     "rv-opt", "PPRF", "DPF"],
+                                     "rv-opt", "PPRF", "PPRF-opt", "DPF"],
                             required=True,
                             help="Scheme to be used for matrix multiplication")
 
@@ -42,7 +42,7 @@ if __name__ == "__main__":
         mm_client = RandomVectorsClient(kwords, kw_idxs, len(words))
     if args.scheme == "rv-opt":
         mm_client = RandomVectorsOptClient(kwords, kw_idxs, len(words))
-    if args.scheme == "PPRF":
+    if args.scheme == "PPRF" or args.scheme == "PPRF-opt":  # opt is on server
         mm_client = PPRFClient(kwords, kw_idxs, len(words))
     if args.scheme == "DPF":
         mm_client = DPFClient(kwords, kw_idxs, len(words))

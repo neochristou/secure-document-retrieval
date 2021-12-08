@@ -1,12 +1,14 @@
 import pickle
+import sys
 import time
 from multiprocessing import Manager, Process
+from random import randint
 
 import numpy as np
 
 import config
 from DPF import *
-from sdr_util import get_random_bits, send_to_server
+from sdr_util import get_random_bits, get_user_keywords, send_to_server
 
 
 class DPFClient():
@@ -18,9 +20,9 @@ class DPFClient():
 
     def request_scores(self):
 
-        print()
-        print("Choosing random number")
+        print("Choosing random seed")
 
+        start_time = time.time()
         t1 = time.time()
 
         rand_seed = get_random_bits(config.SEED_ENTROPY)
@@ -41,12 +43,11 @@ class DPFClient():
 
         t2 = time.time()
 
-        print(f"Created puncturedkeys in {t2 - t1} seconds")
+        print(f"Created punctured keys in {t2 - t1} seconds")
         print()
 
         print("Sending punctured keys to servers")
 
-        t1 = time.time()
         # Multiprocessing in order to avoid blocking until one of the
         # server returns result
         t1 = time.time()
@@ -76,4 +77,29 @@ class DPFClient():
         print()
 
         res = np.abs(r1 - r2)
+        end_time = time.time()
+
+        # Benchmarking
+        with open(config.BENCH_FOLDER + "DPF_cli_latency.txt", "a+") as lat:
+            lat.write(f"{end_time - start_time},")
+        with open(config.BENCH_FOLDER + "DPF_cli_psz.txt", "a+") as psz:
+            psz.write(f"{len(k0)},")
+
         return res
+
+
+if __name__ == "__main__":
+
+    with open(config.SHARED_FOLDER + "words.txt", "r") as words_file:
+        words = words_file.read().split(',')
+    with open(config.SHARED_FOLDER + "titles.txt", "r") as titles_file:
+        titles = titles_file.read().split(';;;')
+
+    # Pick random word for benchmarking
+    kw_idx = randint(0, len(words))
+    kw_idxs = [kw_idx]
+    kwords = [words[kw_idx]]
+    client = DPFClient(kwords, kw_idxs, len(words))
+    client.port1 = int(sys.argv[1])
+    client.port2 = int(sys.argv[2])
+    client.request_scores()

@@ -2,7 +2,7 @@ import random
 
 # nbits = log2(nbr of keywords)
 # nwords = 474808
-#nbits = 3  # The height of the tree
+# nbits = 3  # The height of the tree
 nbits = 19  # The height of the tree
 
 # Size of the PRF values (in bits)
@@ -97,7 +97,10 @@ def Eval(punctured_key, idx):
         return v
 
 
-cache = [[-1 for j in range(2**(i+1))] for i in range(nbits)]
+def reset_cache():
+    global cache
+    cache = [[-1 for j in range(2**(i+1))] for i in range(nbits)]
+
 
 def Eval_opt(punctured_key, idx):
     # print("Requesting idx : {} from punctured key".format(idx))
@@ -136,17 +139,22 @@ def Eval_opt(punctured_key, idx):
         # print("Punctured point requested")
         return v
 
+
 if __name__ == "__main__":
     KEY = 10
 
     pk = puncture(KEY, 3, 999)
 
-    print("Direct eval : {}. Eval with pk : {}".format(GMM(KEY, 5), Eval_opt(pk, 5)))
-    print("Direct eval : {}. Eval_opt with pk : {}".format(GMM(KEY, 6), Eval_opt(pk, 6)))
-    print("Direct eval : {}. Eval_opt with pk : {}".format(GMM(KEY, 7), Eval_opt(pk, 7)))
+    print("Direct eval : {}. Eval with pk : {}".format(
+        GMM(KEY, 5), Eval_opt(pk, 5)))
+    print("Direct eval : {}. Eval_opt with pk : {}".format(
+        GMM(KEY, 6), Eval_opt(pk, 6)))
+    print("Direct eval : {}. Eval_opt with pk : {}".format(
+        GMM(KEY, 7), Eval_opt(pk, 7)))
     print("Direct eval : {}. Eval_opt with pk : {}".format(
         GMM(KEY, 85), Eval_opt(pk, 85)))
-    print("Direct eval : {}. Eval_opt with pk : {}".format(GMM(KEY, 3), Eval_opt(pk, 3)))
+    print("Direct eval : {}. Eval_opt with pk : {}".format(
+        GMM(KEY, 3), Eval_opt(pk, 3)))
     exit()
     print("Direct eval : {}. Eval with pk : {}".format(GMM(KEY, 5), Eval(pk, 5)))
     print("Direct eval : {}. Eval with pk : {}".format(GMM(KEY, 6), Eval(pk, 6)))

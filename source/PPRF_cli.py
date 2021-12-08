@@ -1,7 +1,8 @@
-
 import pickle
+import sys
 import time
 from multiprocessing import Manager, Process
+from random import randint
 
 import numpy as np
 
@@ -18,6 +19,8 @@ class PPRFClient():
         self.nwords = nwords
 
     def request_scores(self):
+
+        start_time = time.time()
 
         print()
         print("Choosing random number")
@@ -80,4 +83,32 @@ class PPRFClient():
         print()
 
         res = r1 - r2
+        end_time = time.time()
+        # Benchmarking
+        with open(config.BENCH_FOLDER + "PPRF_cli_latency.txt", "a+") as lat:
+            lat.write(f"{end_time - start_time},")
+        with open(config.BENCH_FOLDER + "PPRF_cli_psz.txt", "a+") as psz:
+            psz.write(f"{len(pk1_pickled)},")
+
         return res
+
+
+if __name__ == "__main__":
+
+    with open(config.SHARED_FOLDER + "words.txt", "r") as words_file:
+        words = words_file.read().split(',')
+    with open(config.SHARED_FOLDER + "titles.txt", "r") as titles_file:
+        titles = titles_file.read().split(';;;')
+
+    # Pick random word for benchmarking
+    kw_idx = randint(0, len(words))
+    kw_idxs = [kw_idx]
+    kwords = [words[kw_idx]]
+    # kw_idx = words.index("computer")
+    # kw_idxs = [kw_idx]
+    # kwords = ["computer"]
+    print(f"Picked word {kwords[0]}")
+    client = PPRFClient(kwords, kw_idxs, len(words))
+    client.port1 = int(sys.argv[1])
+    client.port2 = int(sys.argv[2])
+    client.request_scores()

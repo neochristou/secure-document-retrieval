@@ -1,3 +1,3 @@
 [submodule "source/libdpf"]
-	path = source/libdpf
+	path = shared/libdpf
 	url = https://github.com/weikengchen/libdpf.git

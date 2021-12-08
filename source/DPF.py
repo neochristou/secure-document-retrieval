@@ -4,7 +4,9 @@ import subprocess
 
 import numpy as np
 
-LIB_PATH = "./libdpf/"
+import config
+
+LIB_PATH = config.SHARED_FOLDER + "libdpf/"
 FSSGEN_PATH = LIB_PATH + "fssgen"
 FSSEVAL_PATH = LIB_PATH + "fsseval"
 

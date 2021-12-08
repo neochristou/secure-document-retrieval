@@ -1,6 +1,7 @@
 
 HOST, PORT1, PORT2 = "localhost", 9998, 9999
 SHARED_FOLDER = "../shared/"
+BENCH_FOLDER = "../bench/"
 SEED_ENTROPY = 123
 NAIVE_PIR_NUM_DOCS = 10
 DOCS_PATH = "../Gutenberg/txt/"
@@ -9,3 +10,4 @@ PIR_HEADER = b"PIR"
 DOCS_DELIM = ';;;;;'
 NWORD_BITS = 19
 BIN_BITS = 9
+PIR_SERVER_FILE = "it_pir_ser.txt"

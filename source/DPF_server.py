@@ -37,7 +37,11 @@ class DPFServer(socketserver.BaseRequestHandler):
             print(f"Calculated GGM and scores in {t2 - t1} seconds")
             # print(len(pickle.dumps(scores)))
 
-            self.request.sendall(pickle.dumps(scores))
+            reply = pickle.dumps(scores)
+            self.request.sendall(reply)
+
+            with open(config.BENCH_FOLDER + "DPF_server_sz.txt", "a+") as psz:
+                psz.write(f"{len(reply)},")
 
         elif data.startswith(config.PIR_HEADER):
 
@@ -51,5 +55,7 @@ class DPFServer(socketserver.BaseRequestHandler):
             print(f"Requested documents retrieved in {t2 - t1} seconds")
 
             self.request.sendall(docs)
+            with open(config.BENCH_FOLDER + config.PIR_SERVER_FILE, "a+") as psz:
+                psz.write(f"{len(docs)},")
         else:
             raise NotImplementedError

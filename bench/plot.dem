@@ -1,0 +1,13 @@
+set title "Client payload size"
+set auto y
+set logscale y
+set style data histogram
+set style histogram cluster gap 1
+set style fill solid border -1
+set boxwidth 0.9
+set xtic rotate by -45 scale 0
+set bmargin 10
+set term png
+set output "test.png"
+plot './cli_payload_sizes.dat' using 2:xticlabels(1) notitle
+#

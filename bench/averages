@@ -1,0 +1,23 @@
+random_vecs_cli_psz 3798626.0
+rv_opt_cli_psz 59351.0
+PPRF_cli_psz 347.76
+PPRF_opt_cli_psz 347.7843137254902
+DPF_cli_psz 250.0
+it_pir_cli_psz 70.0
+naive_pir_cli_psz 22.30392156862745
+
+random_vecs_cli_latency 6.474358525276184
+rv_opt_cli_latency 4.736692223548889
+PPRF_cli_latency 73.3162990474701
+PPRF_opt_cli_latency 10.725483085594925
+DPF_cli_latency 0.7327001141566857
+naive_pir_cli_latency 1.0137578272352032
+it_pir_cli_latency 1.4048479468214745
+
+random_vectors_server_sz 24439.0
+rv_opt_server_sz 24439.0
+PPRF_server_sz 24439.0
+PPRF_opt_server_sz 24439.0
+DPF_server_sz 24439.0
+naive_pir_ser 1979867.925
+it_pir_ser 2832905.7451923075

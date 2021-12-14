@@ -1,6 +1,9 @@
 # Private document search, ranking and retrieval
 
+## Installation
+
 Make sure to clone with `--recursive`, in order to download the `libdpf` dependency.
+Download requirements using `pip install -r requirements.txt`.
 
 ## Usage
 
@@ -10,7 +13,7 @@ First, start two server instances on two different ports by running
 
 ```python3 server.py --scheme scoring_scheme --pir pir_scheme -p portnum```
 
-on two different ports. 
+on two different ports.
 
 Choices for scoring scheme are `random-vectors`, `rv-opt`, `PPRF`, `PPRF-opt`, and `DPF`.
 Choises for PIR scheme are `naive` and `it-pir`.
